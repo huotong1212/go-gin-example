@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"log"
 )
 
@@ -15,6 +16,9 @@ type Model struct {
 	ModifiedOn int `json:"modified_on"`
 }
 
+/**
+初始化数据库
+*/
 func init() {
 	var (
 		err                                               error

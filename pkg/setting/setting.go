@@ -18,6 +18,7 @@ var (
 )
 
 func init() {
+	// 加载配置文件
 	var err error
 	Cfg, err = ini.Load("conf/app.ini")
 	if err != nil {

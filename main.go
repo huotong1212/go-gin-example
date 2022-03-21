@@ -11,6 +11,8 @@ func main() {
 	router := routers.InitRouter()
 
 	setting.LoadServer()
+	setting.LoadBase()
+	setting.LoadApp()
 	fmt.Println(setting.HTTPPort)
 
 	s := &http.Server{
