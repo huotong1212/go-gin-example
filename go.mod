@@ -19,7 +19,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	github.com/robfig/cron v1.2.0 // indirect
+	github.com/robfig/cron v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.8.0
@@ -35,10 +35,10 @@ require (
 replace (
 	github.com/EDDYCJY/go-gin-example/conf => ./go-gin-example/pkg/conf
 	github.com/EDDYCJY/go-gin-example/docs => ./go-gin-example/docs
-	github.com/EDDYCJY/go-gin-example/logging => ./go-gin-example/logging
 	github.com/EDDYCJY/go-gin-example/middleware => ./go-gin-example/middleware
 	github.com/EDDYCJY/go-gin-example/models => ./go-gin-example/models
 	github.com/EDDYCJY/go-gin-example/pkg/e => ./go-gin-example/pkg/e
+	github.com/EDDYCJY/go-gin-example/pkg/logging => ./go-gin-example/pkg/logging
 	github.com/EDDYCJY/go-gin-example/pkg/setting => ./go-gin-example/pkg/setting
 	github.com/EDDYCJY/go-gin-example/pkg/util => ./go-gin-example/pkg/util
 	github.com/EDDYCJY/go-gin-example/routers => ./go-gin-example/routers

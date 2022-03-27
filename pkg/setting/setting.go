@@ -44,6 +44,15 @@ type Database struct {
 
 var DatabaseSetting = &Database{}
 
+type Log struct {
+	LogSavePath string
+	LogSaveName string
+	LogFileExt  string
+	TimeFormat  string
+}
+
+var LogSetting = &Log{}
+
 func Setup() {
 	Cfg, err := ini.Load("conf/app.ini")
 	if err != nil {
@@ -68,6 +77,11 @@ func Setup() {
 	err = Cfg.Section("database").MapTo(DatabaseSetting)
 	if err != nil {
 		log.Fatalf("Cfg.MapTo DatabaseSetting err:%v", err)
+	}
+
+	err = Cfg.Section("log").MapTo(LogSetting)
+	if err != nil {
+		log.Fatalf("Cfg.MapTo LogSetting err:%v", err)
 	}
 }
 
