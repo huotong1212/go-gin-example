@@ -1,11 +1,13 @@
 package v1
 
 import (
+	"github.com/EDDYCJY/go-gin-example/app"
 	"github.com/EDDYCJY/go-gin-example/models"
 	"github.com/EDDYCJY/go-gin-example/pkg/e"
 	log "github.com/EDDYCJY/go-gin-example/pkg/logging"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"github.com/EDDYCJY/go-gin-example/pkg/util"
+	"github.com/EDDYCJY/go-gin-example/service/article_service"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
@@ -13,32 +15,37 @@ import (
 )
 
 func GetArticle(c *gin.Context) {
-	id := com.StrTo(c.Param("id")).MustInt()
+	appG := app.Gin{c}
 
+	id := com.StrTo(c.Param("id")).MustInt()
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
-	code := e.INVALID_PARAMS
-	var data interface{}
-	if !valid.HasErrors() {
-		if models.ExistArticleById(id) {
-			data = models.GetArticle(id)
-			code = e.SUCCESS
-		} else {
-			code = e.ERROR_NOT_EXIST_ARTICLE
-		}
-	} else {
-		for _, err := range valid.Errors {
-			log.Info("err.key: %s, err.message: %s", err.Key, err.Message)
-		}
+	if valid.HasErrors() {
+		// 如果有错误，事先返回
+		app.MarkErrors(valid.Errors)
+		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
+	articleService := article_service.Article{ID: id}
+	// 判断是否存在
+	exists, err := articleService.ExistsByID()
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		return
+	}
+	if !exists {
+		appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_ARTICLE, nil)
+	}
 
+	// 获取这个对象
+	article, err := articleService.Get()
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR_GET_ARTICLE_FAIL, nil)
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, article)
 }
 
 func GetArticles(c *gin.Context) {
@@ -152,7 +159,7 @@ func EditArticle(c *gin.Context) {
 
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
-		if models.ExistArticleById(id) {
+		if exists, _ := models.ExistArticleById(id); exists {
 			if models.ExistsTagById(tagId) {
 				data := make(map[string]interface{})
 				if tagId > 0 {
@@ -200,7 +207,7 @@ func DeleteArticle(c *gin.Context) {
 	code := e.INVALID_PARAMS
 
 	if !valid.HasErrors() {
-		if models.ExistArticleById(id) {
+		if exist, _ := models.ExistArticleById(id); exist {
 			models.DeleteArticle(id)
 			code = e.SUCCESS
 		} else {
