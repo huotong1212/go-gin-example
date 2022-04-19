@@ -20,6 +20,8 @@ type App struct {
 	LogSaveName string
 	LogFileExt  string
 	TimeFormat  string
+
+	ExportSavePath string
 }
 
 var AppSetting = &App{}
